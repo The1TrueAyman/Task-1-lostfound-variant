@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import bcrypt from 'bcryptjs';
 import { User } from '../models/User.js';
+import { Item } from '../models/Item.js';
 
 const createSchema = Joi.object({
   name: Joi.string().min(2).max(60).required(),
@@ -55,17 +56,17 @@ export async function updateUser(req, res, next) {
     const { value, error } = updateSchema.validate(req.body, { abortEarly: false, stripUnknown: true });
     if (error) return res.status(400).json({ message: error.message });
 
-    const doc = await User.findByIdAndUpdate(req.params.id, { $set: value }, { new: true, runValidators: true });
-    if (!doc) return res.status(404).json({ message: 'User not found' });
-    res.json({ user: publicUser(doc) });
+    const doc = await Item.findByIdAndUpdate(req.params.id, { $set: value }, { new: true, runValidators: true });
+    if (!doc) return res.status(404).json({ message: 'Item not found' });
+    res.json({ item: publicUser(doc) });
   } catch (err) { next(err); }
 }
 
 // DELETE /api/users/:id
 export async function deleteUser(req, res, next) {
   try {
-    const doc = await User.findByIdAndDelete(req.params.id);
-    if (!doc) return res.status(404).json({ message: 'User not found' });
+    const doc = await Item.findByIdAndDelete(req.params.id);
+    if (!doc) return res.status(404).json({ message: 'Item not found' });
     res.json({ ok: true });
   } catch (err) { next(err); }
 }
